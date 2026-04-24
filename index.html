@@ -1,4 +1,4 @@
-<\!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -86,9 +86,6 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 /* ── CHECKED SECTION ── */
 .checked-bar{display:flex;justify-content:space-between;align-items:center;padding:10px 4px 4px;font-size:12px;color:var(--muted);}
 .clear-btn{font-size:11px;color:var(--red);background:none;border:none;cursor:pointer;font-family:inherit;padding:4px 0;}
-/* ── FAB ── */
-#fab-add{position:fixed;bottom:calc(var(--nav) + 16px);right:50%;transform:translateX(calc(215px - 28px));width:56px;height:56px;border-radius:50%;background:var(--green);color:#fff;border:none;font-size:28px;cursor:pointer;box-shadow:0 4px 14px rgba(45,106,79,.4);display:flex;align-items:center;justify-content:center;z-index:150;transition:transform .2s;}
-#fab-add:active{transform:translateX(calc(215px - 28px)) scale(.93);}
 /* ── BOTTOM NAV ── */
 #bottom-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;height:var(--nav);background:var(--card);border-top:1px solid var(--border);display:flex;z-index:200;box-shadow:0 -2px 10px rgba(0,0,0,.06);}
 .nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:none;background:none;cursor:pointer;color:var(--muted);font-size:10px;font-family:inherit;transition:color .2s;}
@@ -140,17 +137,6 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 .hist-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-top:1px solid var(--border);font-size:13px;}
 .hist-row.best{background:#FFFDE7;}
 .hist-price{font-weight:700;color:var(--green);}
-/* ── ONBOARDING ── */
-#onboarding{background:var(--card);border-radius:14px;margin:12px 12px 0;padding:20px;border:1.5px solid var(--green-p);}
-.onb-step{display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid var(--border);}
-.onb-step:last-child{border-bottom:none;}
-.onb-num{width:32px;height:32px;border-radius:50%;background:var(--green-p);color:var(--green);font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.onb-num.done{background:var(--green);color:#fff;}
-.onb-body{flex:1;}
-.onb-title{font-size:14px;font-weight:700;}
-.onb-desc{font-size:11px;color:var(--muted);margin-top:2px;}
-.onb-btn{background:var(--green);color:#fff;border:none;border-radius:8px;padding:7px 14px;font-family:inherit;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0;}
-.onb-btn.done-btn{background:var(--green-p);color:var(--green);}
 /* ── DETAIL TOGGLE ── */
 .detail-toggle-row{text-align:center;margin-bottom:10px;}
 .detail-toggle-btn{background:none;border:1px solid var(--border);border-radius:8px;padding:7px 16px;font-family:inherit;font-size:13px;color:var(--muted);cursor:pointer;}
@@ -175,27 +161,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
 
 <div id="error-banner"></div>
 
-<\!-- ONBOARDING (shown only when empty) -->
-<div id="onboarding" style="display:none">
-  <div style="font-size:15px;font-weight:700;color:var(--green);margin-bottom:12px">🛒 はじめに設定しましょう</div>
-  <div class="onb-step">
-    <div class="onb-num" id="onb-num-1">1</div>
-    <div class="onb-body"><div class="onb-title">店舗を追加する</div><div class="onb-desc">よく行くスーパーを登録</div></div>
-    <button class="onb-btn" onclick="openAddStoreModal()">追加</button>
-  </div>
-  <div class="onb-step">
-    <div class="onb-num" id="onb-num-2">2</div>
-    <div class="onb-body"><div class="onb-title">分類を作成する</div><div class="onb-desc">野菜・肉・魚などのカテゴリ</div></div>
-    <button class="onb-btn" onclick="openCatModal('')">追加</button>
-  </div>
-  <div class="onb-step">
-    <div class="onb-num" id="onb-num-3">3</div>
-    <div class="onb-body"><div class="onb-title">商品を追加する</div><div class="onb-desc">買い出しリストに商品を登録</div></div>
-    <button class="onb-btn" id="onb-btn-3" onclick="openAddItemFAB()">追加</button>
-  </div>
-</div>
-
-<\!-- ══ SCREEN 1: 買い出し ══ -->
+<!-- ══ SCREEN 1: 買い出し ══ -->
 <div id="screen-shopping" class="screen active">
   <div id="app-header">
     <div class="header-row">
@@ -221,7 +187,16 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
   <div class="scroll-area" id="shopping-content"></div>
 </div>
 
-<\!-- ══ SCREEN 2: よく買う商品 ══ -->
+<!-- ══ SCREEN: リスト ══ -->
+<div id="screen-list" class="screen">
+  <div style="background:var(--card);padding:12px 16px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;justify-content:space-between;align-items:center;">
+    <span style="font-size:13px;color:var(--muted);">本日の合計</span>
+    <span style="font-size:22px;font-weight:700;color:var(--green);" id="list-total-amount">¥0</span>
+  </div>
+  <div class="scroll-area" id="list-content"></div>
+</div>
+
+<!-- ══ SCREEN 2: よく買う商品 ══ -->
 <div id="screen-master" class="screen">
   <div style="padding:12px 12px 0;flex-shrink:0;">
     <input class="form-input" id="master-search" placeholder="🔍 商品名で検索..." oninput="renderMasterTab(this.value)">
@@ -229,7 +204,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
   <div class="scroll-area" id="master-content"></div>
 </div>
 
-<\!-- ══ SCREEN 3: 設定 ══ -->
+<!-- ══ SCREEN 3: 設定 ══ -->
 <div id="screen-settings" class="screen">
   <div class="sub-nav">
     <button class="sub-btn active" onclick="switchSettingsTab('categories')">分類</button>
@@ -248,15 +223,18 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
   <div class="scroll-area" id="settings-stores" style="display:none"></div>
 </div>
 
-<\!-- ══ BOTTOM NAV ══ -->
 <nav id="bottom-nav">
   <button class="nav-btn active" onclick="switchScreen('shopping')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
     買い出し
   </button>
+  <button class="nav-btn" onclick="switchScreen('list')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><polyline points="4 6 5 6"/><circle cx="4" cy="6" r="1" fill="currentColor"/><circle cx="4" cy="12" r="1" fill="currentColor"/><circle cx="4" cy="18" r="1" fill="currentColor"/></svg>
+    リスト
+  </button>
   <button class="nav-btn" onclick="switchScreen('master')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="11" y2="16"/></svg>
-    よく買う商品
+    商品
   </button>
   <button class="nav-btn" onclick="switchScreen('settings')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
@@ -264,12 +242,10 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
   </button>
 </nav>
 
-<\!-- FAB -->
-<button id="fab-add" onclick="openAddItemFAB()">＋</button>
 
-<\!-- ══ MODALS ══ -->
+<!-- ══ MODALS ══ -->
 
-<\!-- Item add modal -->
+<!-- Item add modal -->
 <div class="modal-overlay" id="item-modal">
   <div class="modal-box">
     <button class="modal-close" onclick="closeModal('item-modal')">✕</button>
@@ -282,79 +258,68 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
       <div id="item-suggest"></div>
     </div>
     <div class="form-group">
-      <label class="input-label">個数</label>
-      <div style="display:flex;align-items:center;gap:12px;">
-        <button type="button" onclick="stepQty(-1)" style="width:44px;height:44px;border-radius:50%;border:1.5px solid var(--green);background:none;color:var(--green);font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;">−</button>
-        <input class="form-input" id="item-qty" type="number" value="1" min="1" step="1" style="width:80px;text-align:center;font-weight:700;font-size:18px;">
-        <button type="button" onclick="stepQty(1)" style="width:44px;height:44px;border-radius:50%;border:1.5px solid var(--green);background:none;color:var(--green);font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;">＋</button>
+      <label class="input-label">サイズ・単位（例：100g、1袋）</label>
+      <input class="form-input" id="item-unit" placeholder="100g・1袋・1個..." oninput="onUnitInput()">
+    </div>
+    <div class="form-group" id="weight-price-row" style="display:none;background:#F0FAF4;border-radius:10px;padding:10px 12px;border:1px solid var(--green-p);">
+      <label class="input-label" style="color:var(--green);font-weight:700;">📦 単価基準（例：100gあたり → 100を入力）</label>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:6px;">
+        <input class="form-input" id="item-price-per-g" type="number" placeholder="例：100" min="1" step="1" style="width:100px;" oninput="onPricePerGChange()">
+        <span style="color:var(--muted);font-size:14px;">gあたり</span>
       </div>
     </div>
-
-    <\!-- DETAIL TOGGLE -->
-    <div class="detail-toggle-row">
-      <button class="detail-toggle-btn" id="detail-toggle-btn" onclick="toggleDetailMode()">詳細を入力 ▼</button>
-    </div>
-    <div id="detail-section" style="display:none">
-      <div class="detail-section">
-        <div class="form-group">
-          <label class="input-label">サイズ・単位（例：1袋、1個）</label>
-          <input class="form-input" id="item-unit" placeholder="1袋・1個..." oninput="onUnitInput()">
-        </div>
-        <\!-- weight price mode -->
-        <div class="form-group" id="weight-price-row" style="display:none;background:#F0FAF4;border-radius:10px;padding:10px 12px;border:1px solid var(--green-p);">
-          <label class="input-label" style="color:var(--green);font-weight:700;">📦 単価の基準（例：100gあたり ¥117 → 100を入力）</label>
-          <div style="display:flex;align-items:center;gap:8px;margin-top:6px;">
-            <input class="form-input" id="item-price-per-g" type="number" placeholder="例：100" min="1" step="1" style="width:100px;" oninput="onPricePerGChange()">
-            <span style="color:var(--muted);font-size:14px;font-weight:500;">gあたり</span>
-          </div>
-          <div style="font-size:11px;color:var(--muted);margin-top:4px;">入力したg数がデフォルト数量・ステッパーの単位になります</div>
-        </div>
-        <\!-- pack weight mode -->
-        <div class="form-group" id="weight-mode-row" style="display:none;background:#F0FAF4;border-radius:10px;padding:10px 12px;border:1px solid var(--green-p);">
-          <label class="input-label" style="color:var(--green);font-weight:700;">📦 パックの重さ（パックに書いてあるg数）</label>
-          <div style="display:flex;align-items:center;gap:8px;margin-top:6px;">
-            <input class="form-input" id="item-actual-g" type="number" placeholder="例：708" min="1" step="1" style="width:110px;" oninput="updateTotalPreview()">
-            <span style="color:var(--muted);font-size:14px;font-weight:500;">g</span>
-          </div>
-          <div style="font-size:11px;color:var(--muted);margin-top:4px;">単価×パックの重さで金額を自動計算します</div>
-        </div>
-        <div class="form-group">
-          <label class="input-label">特売メモ（1つあたり・任意）</label>
-          <input class="form-input" id="item-flyer" type="number" placeholder="¥" oninput="updateTotalPreview()">
-          <span id="item-total-preview" style="font-size:13px;color:var(--green);font-weight:700;margin-top:5px;display:block;min-height:18px;"></span>
-        </div>
-        <div class="form-group">
-          <label class="input-label">メモ</label>
-          <input class="form-input" id="item-memo" placeholder="特記事項など">
-        </div>
+    <div class="form-group" id="weight-mode-row" style="display:none;background:#F0FAF4;border-radius:10px;padding:10px 12px;border:1px solid var(--green-p);">
+      <label class="input-label" style="color:var(--green);font-weight:700;">📦 パックの重さ（g）</label>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:6px;">
+        <input class="form-input" id="item-actual-g" type="number" placeholder="例：708" min="1" step="1" style="width:110px;" oninput="updateTotalPreview()">
+        <span style="color:var(--muted);">g</span>
       </div>
+    </div>
+    <div class="form-group">
+      <label class="input-label">特売メモ（任意）</label>
+      <input class="form-input" id="item-flyer" type="number" placeholder="¥" oninput="updateTotalPreview()">
+      <span id="item-total-preview" style="font-size:13px;color:var(--green);font-weight:700;margin-top:5px;display:block;min-height:18px;"></span>
+    </div>
+    <div class="form-group">
+      <label class="input-label">メモ</label>
+      <input class="form-input" id="item-memo" placeholder="特記事項など">
     </div>
     <button class="btn-primary" onclick="saveShoppingItem()">リストに追加</button>
   </div>
 </div>
 
-<\!-- Item action modal (価格を記録) -->
+<!-- Item edit modal -->
 <div class="modal-overlay" id="action-modal">
   <div class="modal-box">
     <button class="modal-close" onclick="closeModal('action-modal')">✕</button>
-    <div class="modal-title" id="action-title">価格を記録</div>
+    <div class="modal-title" id="action-title">商品を編集</div>
     <input type="hidden" id="action-id">
     <div class="form-group">
-      <label class="input-label">特売メモ</label>
+      <label class="input-label">数量</label>
+      <input class="form-input" id="action-qty" type="number" min="1" placeholder="1" style="font-size:16px;font-weight:700;">
+    </div>
+    <div class="form-group">
+      <label class="input-label">単位</label>
+      <input class="form-input" id="action-unit" placeholder="個・袋・g...">
+    </div>
+    <div class="form-group">
+      <label class="input-label">特売メモ（¥）</label>
       <input class="form-input" id="action-flyer" type="number" placeholder="¥">
     </div>
     <div class="form-group">
-      <label class="input-label">実際の購入価格</label>
+      <label class="input-label">実際の購入価格（¥）</label>
       <input class="form-input" id="action-actual" type="number" placeholder="¥">
     </div>
-    <div style="display:flex;gap:8px;margin-top:8px;">
-      <button class="btn-primary" style="flex:1" onclick="saveAction()">保存</button>
+    <div class="form-group">
+      <label class="input-label">メモ</label>
+      <input class="form-input" id="action-memo" placeholder="特記事項など">
     </div>
+    <button class="btn-primary" onclick="saveAction()">保存</button>
     <button class="btn-outline" style="width:100%;margin-top:10px;color:var(--red);border-color:var(--red)" onclick="confirmDeleteItem()">この商品を削除</button>
   </div>
 </div>
 
-<\!-- Store modal -->
+<!-- Store modal -->
 <div class="modal-overlay" id="store-modal">
   <div class="modal-box">
     <button class="modal-close" onclick="closeModal('store-modal')">✕</button>
@@ -376,7 +341,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
   </div>
 </div>
 
-<\!-- Category modal -->
+<!-- Category modal -->
 <div class="modal-overlay" id="cat-modal">
   <div class="modal-box">
     <button class="modal-close" onclick="closeModal('cat-modal')">✕</button>
@@ -400,7 +365,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
   </div>
 </div>
 
-<\!-- Inventory item modal -->
+<!-- Inventory item modal -->
 <div class="modal-overlay" id="inv-modal">
   <div class="modal-box">
     <button class="modal-close" onclick="closeModal('inv-modal')">✕</button>
@@ -415,7 +380,7 @@ body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text
   </div>
 </div>
 
-<\!-- Confirm dialog -->
+<!-- Confirm dialog -->
 <div id="confirm-dialog">
   <div class="confirm-box">
     <div class="confirm-title" id="confirm-title">確認</div>
@@ -448,7 +413,7 @@ function createFetchClient(url, key) {
     try {
       const r = await fetch(url + path, {
         method, headers: H,
-        body: body \!= null ? JSON.stringify(body) : undefined
+        body: body != null ? JSON.stringify(body) : undefined
       });
       if (r.status === 204) return {data: null, error: null};
       const d = await r.json();
@@ -599,7 +564,6 @@ async function init() {
   await loadData();
   startPolling();
   renderAll();
-  checkOnboarding();
   setupSwipeGesture();
 }
 
@@ -608,7 +572,7 @@ async function loadData() {
     const catsRes = await db.from('categories').select('*').order('sort_order');
     if (catsRes.error) throw new Error('categories: ' + JSON.stringify(catsRes.error));
 
-    if (\!catsRes.data || catsRes.data.length === 0) {
+    if (!catsRes.data || catsRes.data.length === 0) {
       await seedPresets();
     } else {
       S.categories = catsRes.data;
@@ -661,34 +625,11 @@ let _pollTimer = null;
 function startPolling() {
   if (_pollTimer) clearInterval(_pollTimer);
   _pollTimer = setInterval(async () => {
-    if (\!document.hidden) {
+    if (!document.hidden) {
       const r = await db.from('shopping_list').select('*').eq('date', today()).order('created_at');
       if (r.data) { S.shoppingList = r.data; renderShopping(); updateBudget(); }
     }
   }, 15000);
-}
-
-// ═══════════════════════════════════════
-// ONBOARDING
-// ═══════════════════════════════════════
-function checkOnboarding() {
-  const hasStore = S.stores.length > 0;
-  const hasCat = S.categories.length > 0;
-  const hasItem = S.shoppingList.length > 0;
-  const ob = document.getElementById('onboarding');
-
-  if (hasStore && hasCat && hasItem) {
-    ob.style.display = 'none';
-    return;
-  }
-  ob.style.display = 'block';
-
-  const n1 = document.getElementById('onb-num-1');
-  const n2 = document.getElementById('onb-num-2');
-  const n3 = document.getElementById('onb-num-3');
-  if (hasStore) n1.className = 'onb-num done';
-  if (hasCat) n2.className = 'onb-num done';
-  if (hasItem) n3.className = 'onb-num done';
 }
 
 // ═══════════════════════════════════════
@@ -698,10 +639,9 @@ function switchScreen(name) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('screen-'+name).classList.add('active');
-  const idx = ['shopping','master','settings'].indexOf(name);
-  document.querySelectorAll('.nav-btn')[idx].classList.add('active');
-  const fab = document.getElementById('fab-add');
-  fab.style.display = name === 'shopping' ? 'flex' : 'none';
+  const idx = ['shopping','list','master','settings'].indexOf(name);
+  if (idx >= 0) document.querySelectorAll('.nav-btn')[idx].classList.add('active');
+  if (name === 'list') renderList();
   if (name === 'master') renderMasterTab('');
   if (name === 'settings') renderSettingsTab();
 }
@@ -742,9 +682,9 @@ function renderStoreTabs() {
   const addBtn = document.getElementById('add-store-btn');
   // Sort stores by last_used_at descending (most recent first)
   const sorted = S.stores.filter(s => s.is_master).slice().sort((a, b) => {
-    if (\!a.last_used_at && \!b.last_used_at) return 0;
-    if (\!a.last_used_at) return 1;
-    if (\!b.last_used_at) return -1;
+    if (!a.last_used_at && !b.last_used_at) return 0;
+    if (!a.last_used_at) return 1;
+    if (!b.last_used_at) return -1;
     return b.last_used_at.localeCompare(a.last_used_at);
   });
   sorted.forEach(store => {
@@ -761,13 +701,14 @@ function renderStoreTabs() {
 
 async function selectStore(id) {
   S.currentStore = id;
-  // Update last_used_at for the selected store
-  if (id \!== 'all') {
+  // Update last_used_at for the selected store (列が存在する場合のみ)
+  if (id !== 'all') {
     const now = new Date().toISOString();
     const store = getStore(id);
     if (store) {
       store.last_used_at = now;
-      await db.from('stores').update({last_used_at: now}).eq('id', id);
+      // エラーは無視（列がなくても動作を止めない）
+      db.from('stores').update({last_used_at: now}).eq('id', id).catch(()=>{});
     }
   }
   renderStoreTabs();
@@ -778,26 +719,29 @@ async function selectStore(id) {
 // SWIPE GESTURE (修正⑥)
 // ═══════════════════════════════════════
 function setupSwipeGesture() {
-  let startX = 0, startY = 0, dragging = false;
-  const area = document.getElementById('screen-shopping');
-  area.addEventListener('touchstart', e => {
-    if (e.target.closest('.item-card')) return; // item swipe handled separately
+  let startX = 0, startY = 0;
+  document.body.addEventListener('touchstart', e => {
+    if (e.target.closest('.item-card,.modal-overlay,#bottom-nav,#store-tabs-wrap')) return;
     startX = e.touches[0].clientX;
     startY = e.touches[0].clientY;
-    dragging = true;
   }, {passive: true});
-  area.addEventListener('touchend', e => {
-    if (\!dragging) return;
-    dragging = false;
+  document.body.addEventListener('touchend', e => {
+    const activeScreen = document.querySelector('.screen.active');
+    if (!activeScreen || (activeScreen.id !== 'screen-shopping' && activeScreen.id !== 'screen-list')) return;
     const dx = e.changedTouches[0].clientX - startX;
     const dy = e.changedTouches[0].clientY - startY;
     if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
-    const storeList = ['all', ...S.stores.filter(s => s.is_master).map(s => s.id)];
+    const sortedStores = S.stores.filter(s => s.is_master).slice().sort((a, b) => {
+      if (!a.last_used_at && !b.last_used_at) return 0;
+      if (!a.last_used_at) return 1;
+      if (!b.last_used_at) return -1;
+      return b.last_used_at.localeCompare(a.last_used_at);
+    });
+    const storeList = ['all', ...sortedStores.map(s => s.id)];
     let idx = storeList.indexOf(S.currentStore);
-    if (dx < 0) idx = Math.min(storeList.length - 1, idx + 1); // left swipe → next
-    else idx = Math.max(0, idx - 1); // right swipe → prev
+    if (dx < 0) idx = Math.min(storeList.length - 1, idx + 1);
+    else idx = Math.max(0, idx - 1);
     selectStore(storeList[idx]);
-    // Scroll store tab into view
     setTimeout(() => {
       const activeTab = document.querySelector('.store-tab.active');
       if (activeTab) activeTab.scrollIntoView({behavior:'smooth', block:'nearest', inline:'center'});
@@ -812,7 +756,7 @@ function updateBudget() {
   const totalBudget = S.budgets.reduce((s,b) => s + b.amount, 0);
   const storeAmts = {};
   let total = 0;
-  S.shoppingList.filter(item => \!item.is_checked).forEach(item => {
+  S.shoppingList.filter(item => !item.is_checked).forEach(item => {
     const a = calcItemPrice(item);
     total += a;
     if (item.store_id) storeAmts[item.store_id] = (storeAmts[item.store_id]||0) + a;
@@ -824,7 +768,7 @@ function updateBudget() {
   chips.innerHTML = '';
   S.stores.forEach(store => {
     const a = storeAmts[store.id]||0;
-    if (\!a) return;
+    if (!a) return;
     chips.innerHTML += '<div class="bs-chip"><span class="dot" style="background:'+store.color+'"></span>'+
       store.name.split(' ')[0]+' ¥'+Math.round(a).toLocaleString()+'</div>';
   });
@@ -834,7 +778,7 @@ function updateBudget() {
   if (totalBudget > 0) {
     S.stores.forEach(store => {
       const a = storeAmts[store.id]||0;
-      if (\!a) return;
+      if (!a) return;
       const seg = document.createElement('div');
       seg.className = 'progress-seg';
       seg.style.width = Math.min(100, a/totalBudget*100) + '%';
@@ -845,6 +789,80 @@ function updateBudget() {
 }
 
 // ═══════════════════════════════════════
+// LIST SCREEN
+// ═══════════════════════════════════════
+function renderList() {
+  const el = document.getElementById('list-content');
+  if (!el) return;
+
+  const unchecked = S.shoppingList.filter(i => !i.is_checked);
+  const checked = S.shoppingList.filter(i => i.is_checked);
+
+  // Update total
+  let total = 0;
+  unchecked.forEach(item => { total += calcItemPrice(item); });
+  const totalEl = document.getElementById('list-total-amount');
+  if (totalEl) totalEl.textContent = '¥' + Math.round(total).toLocaleString();
+
+  let html = '';
+
+  if (unchecked.length === 0 && checked.length === 0) {
+    html = '<div class="empty-state"><div class="icon">📋</div><p>リストが空です<br>「買い出し」タブから商品を追加してください</p></div>';
+    el.innerHTML = html;
+    return;
+  }
+
+  // Unchecked items
+  unchecked.forEach(item => {
+    const master = getItem(item.item_id);
+    const name = (master && master.name) || item.item_name || '商品';
+    const price = item.actual_price || item.flyer_price || 0;
+    const store = getStore(item.store_id);
+    const borderColor = store ? store.color : 'var(--green)';
+    html += '<div style="background:var(--card);border-radius:10px;margin-bottom:8px;border:1px solid var(--border);border-left:4px solid '+borderColor+';display:flex;align-items:center;gap:0;overflow:hidden;">';
+    // Large checkbox area
+    html += '<div onclick="toggleCheck(\''+item.id+'\')" style="width:60px;min-height:60px;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;">';
+    html += '<div style="width:28px;height:28px;border-radius:50%;border:2.5px solid var(--border);display:flex;align-items:center;justify-content:center;"></div>';
+    html += '</div>';
+    // Content
+    html += '<div style="flex:1;padding:10px 0;min-width:0;">';
+    html += '<div style="font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:8px;">'+name+'</div>';
+    html += '<div style="font-size:12px;color:var(--muted);margin-top:2px;">';
+    html += (item.qty||1) + (item.unit||'個');
+    if (store) html += '　' + store.name.split(' ')[0];
+    html += '</div></div>';
+    // Price
+    if (price) {
+      const totalAmt = calcItemPrice(item);
+      html += '<div style="padding:10px 14px 10px 0;text-align:right;flex-shrink:0;">';
+      html += '<div style="font-size:15px;font-weight:700;">¥'+price+'</div>';
+      if (totalAmt !== price) html += '<div style="font-size:10px;color:var(--muted);">合計 ¥'+Math.round(totalAmt).toLocaleString()+'</div>';
+      html += '</div>';
+    }
+    html += '</div>';
+  });
+
+  // Checked items (greyed, at bottom)
+  if (checked.length > 0) {
+    html += '<div style="padding:8px 4px 4px;font-size:12px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;">';
+    html += '<span>購入済み（'+checked.length+'）</span>';
+    html += '<button class="clear-btn" onclick="clearChecked()">リストから削除</button></div>';
+    checked.forEach(item => {
+      const master = getItem(item.item_id);
+      const name = (master && master.name) || item.item_name || '商品';
+      html += '<div style="background:var(--card);border-radius:10px;margin-bottom:6px;border:1px solid var(--border);border-left:4px solid var(--muted);display:flex;align-items:center;opacity:0.45;overflow:hidden;">';
+      html += '<div onclick="toggleCheck(\''+item.id+'\')" style="width:60px;min-height:56px;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;">';
+      html += '<div style="width:28px;height:28px;border-radius:50%;background:var(--green);border:2px solid var(--green);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:700;">✓</div>';
+      html += '</div>';
+      html += '<div style="flex:1;padding:10px 0;"><div style="font-size:15px;font-weight:500;text-decoration:line-through;color:var(--muted);">'+name+'</div></div>';
+      html += '</div>';
+    });
+  }
+
+  el.innerHTML = html;
+}
+
+// ═══════════════════════════════════════
 // SHOPPING SCREEN
 // ═══════════════════════════════════════
 function renderShopping() {
@@ -852,7 +870,7 @@ function renderShopping() {
   const filtered = S.currentStore === 'all'
     ? S.shoppingList
     : S.shoppingList.filter(i => i.store_id === S.currentStore);
-  const unchecked = filtered.filter(i => \!i.is_checked);
+  const unchecked = filtered.filter(i => !i.is_checked);
   const checked = filtered.filter(i => i.is_checked);
 
   // Sort: frequent items first (by purchase count)
@@ -865,11 +883,11 @@ function renderShopping() {
     const storeGroups = {};
     unchecked.forEach(item => {
       const sid = item.store_id || 'none';
-      if (\!storeGroups[sid]) storeGroups[sid] = [];
+      if (!storeGroups[sid]) storeGroups[sid] = [];
       storeGroups[sid].push(item);
     });
     S.stores.filter(s => s.is_master).forEach(s => {
-      if (\!storeGroups[s.id]) storeGroups[s.id] = [];
+      if (!storeGroups[s.id]) storeGroups[s.id] = [];
     });
     Object.keys(storeGroups).forEach(storeId => {
       const items = storeGroups[storeId];
@@ -902,7 +920,6 @@ function renderShopping() {
   }
   el.innerHTML = html;
   attachItemSwipe();
-  checkOnboarding();
 }
 
 function renderCatGroups(items, storeId) {
@@ -910,7 +927,7 @@ function renderCatGroups(items, storeId) {
   const catMap = {};
   items.forEach(item => {
     const cid = item.category_id || 'none';
-    if (\!catMap[cid]) catMap[cid] = [];
+    if (!catMap[cid]) catMap[cid] = [];
     catMap[cid].push(item);
   });
   const cats = S.categories.slice().sort((a,b) => (a.sort_order||0)-(b.sort_order||0));
@@ -943,20 +960,20 @@ function renderCatGroups(items, storeId) {
 function toggleCatCompare(catId, storeId, btn) {
   const panelId = 'cat-compare-' + catId + '-' + storeId;
   const panel = document.getElementById(panelId);
-  if (\!panel) return;
-  if (panel.style.display \!== 'none') {
+  if (!panel) return;
+  if (panel.style.display !== 'none') {
     panel.style.display = 'none';
     btn.textContent = '店舗比較';
     return;
   }
   // Compute per-store total for this category
   const storeAmts = {};
-  S.shoppingList.filter(i => \!i.is_checked && i.category_id === catId).forEach(item => {
+  S.shoppingList.filter(i => !i.is_checked && i.category_id === catId).forEach(item => {
     const sid = item.store_id || 'none';
     storeAmts[sid] = (storeAmts[sid]||0) + calcItemPrice(item);
   });
   const entries = Object.entries(storeAmts).filter(([,v]) => v > 0);
-  if (\!entries.length) {
+  if (!entries.length) {
     panel.innerHTML = '<div class="cat-compare-panel" style="color:var(--muted);font-size:12px;">この分類に金額が設定された商品がありません</div>';
     panel.style.display = 'block';
     btn.textContent = '閉じる ▲';
@@ -1027,16 +1044,16 @@ function renderItemCard(item) {
   const totalAmt = isW ? (price * qty / extractUnitG(unit)) : (price * qty);
   let priceLabel = item.actual_price ? '購入済' : (item.flyer_price ? '予定' : (lastPrice ? '参考' : ''));
   if (isW && totalAmt) priceLabel = qty + 'g分';
-  else if (\!isW && qty > 1 && totalAmt) priceLabel = qty + '点合計';
+  else if (!isW && qty > 1 && totalAmt) priceLabel = qty + '点合計';
 
   let badges = '';
   if (item.flyer_price) badges += '<span class="badge badge-orange">特売 ¥'+item.flyer_price+'</span>';
-  if (lastPrice && \!item.flyer_price) badges += '<span class="badge badge-gray">前回 ¥'+lastPrice+'</span>';
+  if (lastPrice && !item.flyer_price) badges += '<span class="badge badge-gray">前回 ¥'+lastPrice+'</span>';
   const itemCounts = {};
   S.priceHistory.forEach(h => { itemCounts[h.item_id] = (itemCounts[h.item_id]||0) + 1; });
   if (item.item_id && (itemCounts[item.item_id]||0) >= 3) badges += '<span class="badge badge-freq">よく買う</span>';
   const storeHist = {};
-  hist.slice(0,5).forEach(h => { if (\!storeHist[h.store_id]) storeHist[h.store_id] = h.price; });
+  hist.slice(0,5).forEach(h => { if (!storeHist[h.store_id]) storeHist[h.store_id] = h.price; });
   Object.keys(storeHist).forEach(sid => {
     const st = getStore(sid);
     const p = storeHist[sid];
@@ -1046,24 +1063,16 @@ function renderItemCard(item) {
 
   const store = getStore(item.store_id);
   const borderColor = store ? store.color : '#52B788';
-  const checked = item.is_checked;
-  const stepDelta = isW ? extractUnitG(unit) : 1;
 
-  return '<div class="item-card'+(checked?' checked':'')+'" style="border-left-color:'+borderColor+'" data-id="'+item.id+'">' +
+  // カード全体をタップで編集ダイアログ（チェックボックス・±ボタンなし）
+  const qtyLabel = isW ? qty+'g' : (qty > 1 ? qty+(unit||'個') : (unit||'個'));
+
+  return '<div class="item-card" style="border-left-color:'+borderColor+';cursor:pointer;" data-id="'+item.id+'" onclick="openAction(\''+item.id+'\')">' +
     '<div class="item-main">' +
-    '<div class="item-check'+(checked?' done':'')+'" onclick="toggleCheck(\''+item.id+'\')"></div>' +
-    '<div class="item-body" onclick="openAction(\''+item.id+'\')">' +
+    '<div class="item-body" style="flex:1;min-width:0;">' +
     '<div class="item-name">'+name+'</div>' +
     '<div class="item-sub">' +
-    (isW
-      ? '<span>'+unit+'単価</span>' +
-        '<button class="qty-btn" onclick="event.stopPropagation();changeQty(\''+item.id+'\',-'+stepDelta+')">−</button>' +
-        '<span style="font-size:13px;font-weight:700;min-width:40px;text-align:center">'+qty+'g</span>' +
-        '<button class="qty-btn" onclick="event.stopPropagation();changeQty(\''+item.id+'\','+stepDelta+')">＋</button>'
-      : '<span>'+(unit||'個')+'</span>' +
-        '<button class="qty-btn" onclick="event.stopPropagation();changeQty(\''+item.id+'\',-1)">−</button>' +
-        '<span style="font-size:13px;font-weight:700;min-width:30px;text-align:center">'+qty+'</span>' +
-        '<button class="qty-btn" onclick="event.stopPropagation();changeQty(\''+item.id+'\',1)">＋</button>') +
+    '<span style="color:var(--muted)">'+qtyLabel+'</span>' +
     '</div>' +
     (badges ? '<div class="item-badges">'+badges+'</div>' : '') +
     (item.memo ? '<div style="font-size:11px;color:var(--muted);margin-top:3px;">📝 '+item.memo+'</div>' : '') +
@@ -1086,7 +1095,7 @@ let _selectedMaster = null;
 let _detailMode = false;
 
 function toggleDetailMode() {
-  _detailMode = \!_detailMode;
+  _detailMode = !_detailMode;
   document.getElementById('detail-section').style.display = _detailMode ? 'block' : 'none';
   document.getElementById('detail-toggle-btn').textContent = _detailMode ? '詳細を閉じる ▲' : '詳細を入力 ▼';
 }
@@ -1101,40 +1110,29 @@ function onUnitInput() {
 }
 
 function onPricePerGChange() {
-  // Set default qty to the entered gram value
-  const perG = parseInt(document.getElementById('item-price-per-g').value) || 0;
-  if (perG > 0) {
-    document.getElementById('item-qty').value = perG;
-  }
   updateTotalPreview();
 }
 
 function stepQty(delta) {
-  const u = document.getElementById('item-unit') ? document.getElementById('item-unit').value : '';
-  const isW = isWeightUnit(u);
-  const step = isW ? (extractUnitG(u) || 10) : 1;
-  const el = document.getElementById('item-qty');
-  const minVal = isW ? step : 1;
-  el.value = Math.max(minVal, (parseInt(el.value)||minVal) + delta * step);
-  updateTotalPreview();
+  // No-op: qty input removed
 }
 
 function updateTotalPreview() {
   const u = document.getElementById('item-unit') ? document.getElementById('item-unit').value : '';
   const flyer = parseFloat(document.getElementById('item-flyer') ? document.getElementById('item-flyer').value : '') || 0;
   const el = document.getElementById('item-total-preview');
-  if (\!el) return;
-  if (\!flyer) { el.textContent = ''; return; }
+  if (!el) return;
+  if (!flyer) { el.textContent = ''; return; }
   if (isWeightUnit(u)) {
-    const g = parseInt(document.getElementById('item-qty').value) || 0;
+    const perG = parseInt(document.getElementById('item-price-per-g') ? document.getElementById('item-price-per-g').value : '') || 0;
+    const actualG = parseInt(document.getElementById('item-actual-g') ? document.getElementById('item-actual-g').value : '') || 0;
+    const g = perG || actualG;
     const unitG = extractUnitG(u);
-    if (\!g) { el.textContent = ''; return; }
+    if (!g) { el.textContent = ''; return; }
     const total = flyer * g / unitG;
     el.textContent = g + 'g × ¥' + flyer + '/' + unitG + 'g = 合計 ¥' + Math.round(total).toLocaleString();
   } else {
-    const qty = parseInt(document.getElementById('item-qty').value)||1;
-    const t = flyer * qty;
-    el.textContent = qty > 1 ? '合計 ¥' + Math.round(t).toLocaleString() : '';
+    el.textContent = '¥' + Math.round(flyer).toLocaleString();
   }
 }
 
@@ -1144,17 +1142,17 @@ function openAddItem(storeId, catId) {
   document.getElementById('item-store-id').value = storeId;
   document.getElementById('item-cat-id').value = catId;
   document.getElementById('item-name').value = '';
-  document.getElementById('item-qty').value = '1';
   document.getElementById('item-unit').value = '';
   document.getElementById('item-flyer').value = '';
   document.getElementById('item-memo').value = '';
-  document.getElementById('item-price-per-g').value = '';
+  const pricePerG = document.getElementById('item-price-per-g');
+  if (pricePerG) pricePerG.value = '';
+  const actualG = document.getElementById('item-actual-g');
+  if (actualG) actualG.value = '';
   document.getElementById('item-total-preview').textContent = '';
   document.getElementById('item-suggest').innerHTML = '';
   document.getElementById('weight-mode-row').style.display = 'none';
   document.getElementById('weight-price-row').style.display = 'none';
-  document.getElementById('detail-section').style.display = 'none';
-  document.getElementById('detail-toggle-btn').textContent = '詳細を入力 ▼';
   document.getElementById('item-modal-title').textContent = '商品を追加';
   openModal('item-modal');
 }
@@ -1167,7 +1165,7 @@ function openAddItemFAB() {
 
 function suggestItems(val) {
   const el = document.getElementById('item-suggest');
-  if (\!val) { el.innerHTML = ''; return; }
+  if (!val) { el.innerHTML = ''; return; }
   const matches = S.items.filter(i => i.name.includes(val)).slice(0,5);
   el.innerHTML = matches.map(m =>
     '<div class="suggest-item" onclick="pickSuggest(\''+m.id+'\')">'+m.name+'</div>'
@@ -1176,7 +1174,7 @@ function suggestItems(val) {
 
 function pickSuggest(id) {
   const item = getItem(id);
-  if (\!item) return;
+  if (!item) return;
   _selectedMaster = item;
   document.getElementById('item-name').value = item.name;
   if (item.stock_unit) {
@@ -1184,8 +1182,6 @@ function pickSuggest(id) {
     // Show detail section if weight unit
     if (isWeightUnit(item.stock_unit)) {
       _detailMode = true;
-      document.getElementById('detail-section').style.display = 'block';
-      document.getElementById('detail-toggle-btn').textContent = '詳細を閉じる ▲';
     }
     onUnitInput();
   }
@@ -1194,48 +1190,75 @@ function pickSuggest(id) {
 
 async function saveShoppingItem() {
   const name = document.getElementById('item-name').value.trim();
-  if (\!name) return;
+  if (!name) return;
   const storeId = document.getElementById('item-store-id').value;
   const catId = document.getElementById('item-cat-id').value;
-  const unit = document.getElementById('item-unit').value.trim() || '個';
-  let qty;
+  const unit = (document.getElementById('item-unit') ? document.getElementById('item-unit').value.trim() : '') || '個';
+  const flyer = document.getElementById('item-flyer') ? (parseFloat(document.getElementById('item-flyer').value)||null) : null;
+
+  // qty: weight unit uses price-per-g value, others default to 1
+  let qty = 1;
   if (isWeightUnit(unit)) {
-    qty = parseInt(document.getElementById('item-qty').value) || extractUnitG(unit);
-  } else {
-    qty = parseInt(document.getElementById('item-qty').value) || 1;
+    const perG = parseInt(document.getElementById('item-price-per-g') ? document.getElementById('item-price-per-g').value : '') || 0;
+    if (perG > 0) qty = perG;
+    else {
+      const actualG = parseInt(document.getElementById('item-actual-g') ? document.getElementById('item-actual-g').value : '') || 0;
+      if (actualG > 0) qty = actualG;
+    }
   }
-  const flyer = parseFloat(document.getElementById('item-flyer').value) || null;
-  const memo = document.getElementById('item-memo').value.trim() || null;
+
+  // Find existing item master
   let itemId = _selectedMaster ? _selectedMaster.id : null;
-  if (\!itemId) {
+  if (!itemId) {
     const ex = S.items.find(i => i.name === name);
     if (ex) itemId = ex.id;
   }
-  if (\!itemId) {
-    const ni = {name, category_id: catId||null, stock_unit: unit, input_count: 1};
-    const r = await db.from('items').insert(ni).select().single();
-    if (r.error) { showError('商品の保存に失敗しました'); return; }
-    if (r.data) { itemId = r.data.id; S.items.push(r.data); }
-  }
+
+  // Build minimal entry — only columns known to exist in the schema
   const entry = {
-    item_id: itemId, item_name: name,
-    store_id: (\!storeId||storeId==='none') ? null : storeId,
-    category_id: catId||null,
-    qty, unit, flyer_price: flyer, memo,
-    is_checked: false, date: today()
+    item_name: name,
+    store_id: (!storeId || storeId === 'none' || storeId === 'all') ? null : storeId,
+    category_id: catId || null,
+    qty,
+    unit,
+    flyer_price: flyer,
+    is_checked: false,
+    date: today()
   };
+  if (itemId) entry.item_id = itemId;
+
   const res = await db.from('shopping_list').insert(entry).select().single();
-  if (res.error) { showError('リストへの追加に失敗しました'); return; }
-  if (res.data) S.shoppingList.push(res.data);
+  if (res.error) {
+    const msg = res.error.message || res.error.hint || JSON.stringify(res.error);
+    showError('追加エラー: ' + msg);
+    return;
+  }
+  // Use returned data if available, otherwise construct local entry with temp id
+  const saved = res.data || Object.assign({id: 'tmp_' + Date.now()}, entry);
+  S.shoppingList.push(saved);
+
+  // Create item master record in background (non-blocking, failure is OK)
+  if (!itemId) {
+    db.from('items').insert({name, category_id: catId||null, stock_unit: unit}).select().single().then(r => {
+      if (r.data) {
+        S.items.push(r.data);
+        if (saved.id && !saved.id.startsWith('tmp_')) {
+          db.from('shopping_list').update({item_id: r.data.id}).eq('id', saved.id);
+          saved.item_id = r.data.id;
+        }
+      }
+    }).catch(()=>{});
+  }
+
   _selectedMaster = null;
   closeModal('item-modal');
-  renderShopping(); updateBudget();
+  renderShopping(); renderList(); updateBudget();
 }
 
 async function toggleCheck(id) {
   const item = S.shoppingList.find(i => i.id === id);
-  if (\!item) return;
-  item.is_checked = \!item.is_checked;
+  if (!item) return;
+  item.is_checked = !item.is_checked;
   // Only record price history when checking (purchasing) - not when unchecking
   if (item.is_checked) {
     const price = item.actual_price || item.flyer_price;
@@ -1245,45 +1268,54 @@ async function toggleCheck(id) {
       if (hr.data) S.priceHistory.unshift(hr.data);
     }
     const master = getItem(item.item_id);
-    if (master && master.current_stock \!== undefined) {
+    if (master && master.current_stock !== undefined) {
       master.current_stock = (master.current_stock||0) + (item.qty||1);
       await db.from('items').update({current_stock: master.current_stock}).eq('id', master.id);
     }
   }
   const r = await db.from('shopping_list').update({is_checked: item.is_checked}).eq('id', id);
-  if (r.error) { item.is_checked = \!item.is_checked; showError('更新に失敗しました'); }
-  renderShopping(); updateBudget();
+  if (r.error) { item.is_checked = !item.is_checked; showError('更新に失敗しました'); }
+  renderShopping(); renderList(); updateBudget();
 }
 
 async function changeQty(id, delta) {
   const item = S.shoppingList.find(i => i.id === id);
-  if (\!item) return;
+  if (!item) return;
   const minVal = isWeightUnit(item.unit) ? extractUnitG(item.unit) : 1;
   item.qty = Math.max(minVal, (item.qty||1) + delta);
   await db.from('shopping_list').update({qty: item.qty}).eq('id', id);
-  renderShopping(); updateBudget();
+  renderShopping(); renderList(); updateBudget();
 }
 
 function openAction(id) {
   const item = S.shoppingList.find(i => i.id === id);
-  if (\!item) return;
+  if (!item) return;
   const master = getItem(item.item_id);
-  document.getElementById('action-title').textContent = (master&&master.name) || item.item_name || '価格を記録';
+  document.getElementById('action-title').textContent = (master&&master.name) || item.item_name || '商品を編集';
   document.getElementById('action-id').value = id;
+  document.getElementById('action-qty').value = item.qty || 1;
+  document.getElementById('action-unit').value = item.unit || '';
   document.getElementById('action-flyer').value = item.flyer_price || '';
   document.getElementById('action-actual').value = item.actual_price || '';
+  document.getElementById('action-memo').value = item.memo || '';
   openModal('action-modal');
 }
 
 async function saveAction() {
   const id = document.getElementById('action-id').value;
   const item = S.shoppingList.find(i => i.id === id);
-  if (\!item) return;
-  item.flyer_price = parseFloat(document.getElementById('action-flyer').value)||null;
-  item.actual_price = parseFloat(document.getElementById('action-actual').value)||null;
-  await db.from('shopping_list').update({flyer_price:item.flyer_price,actual_price:item.actual_price}).eq('id',id);
+  if (!item) return;
+  item.qty = parseInt(document.getElementById('action-qty').value) || 1;
+  item.unit = document.getElementById('action-unit').value || item.unit || '個';
+  item.flyer_price = parseFloat(document.getElementById('action-flyer').value) || null;
+  item.actual_price = parseFloat(document.getElementById('action-actual').value) || null;
+  item.memo = document.getElementById('action-memo').value || null;
+  // memo列がDBにない場合に備えて除外して更新
+  const updateData = {qty:item.qty, unit:item.unit, flyer_price:item.flyer_price, actual_price:item.actual_price};
+  const r = await db.from('shopping_list').update(updateData).eq('id', id);
+  if (r && r.error) showError('保存エラー: ' + (r.error.message||JSON.stringify(r.error)));
   closeModal('action-modal');
-  renderShopping(); updateBudget();
+  renderShopping(); renderList(); updateBudget();
 }
 
 function confirmDeleteItem(id) {
@@ -1297,7 +1329,7 @@ function confirmDeleteItem(id) {
 }
 
 async function doDeleteItem(id) {
-  S.shoppingList = S.shoppingList.filter(i => i.id \!== id);
+  S.shoppingList = S.shoppingList.filter(i => i.id !== id);
   await db.from('shopping_list').delete().eq('id', id);
   closeModal('action-modal');
   renderShopping(); updateBudget();
@@ -1305,9 +1337,9 @@ async function doDeleteItem(id) {
 
 async function clearChecked() {
   const ids = S.shoppingList.filter(i => i.is_checked).map(i => i.id);
-  S.shoppingList = S.shoppingList.filter(i => \!i.is_checked);
+  S.shoppingList = S.shoppingList.filter(i => !i.is_checked);
   if (ids.length) await db.from('shopping_list').delete().in('id', ids);
-  renderShopping(); updateBudget();
+  renderShopping(); renderList(); updateBudget();
 }
 
 // ═══════════════════════════════════════
@@ -1326,7 +1358,7 @@ function initColorSwatches(selected) {
   document.getElementById('color-swatches').innerHTML = COLORS.map(c =>
     '<div class="color-swatch'+(c===selected?' selected':'')+'" style="background:'+c+'" data-color="'+c+'" onclick="selectColor(this)"></div>'
   ).join('');
-  if (\!selected) document.querySelector('.color-swatch').classList.add('selected');
+  if (!selected) document.querySelector('.color-swatch').classList.add('selected');
 }
 
 function selectColor(el) {
@@ -1337,7 +1369,7 @@ function selectColor(el) {
 async function saveStore() {
   let id = document.getElementById('store-edit-id').value;
   const name = document.getElementById('store-name').value.trim();
-  if (\!name) return;
+  if (!name) return;
   const color = (document.querySelector('.color-swatch.selected')||{dataset:{color:COLORS[0]}}).dataset.color;
   const amount = parseFloat(document.getElementById('store-budget').value)||0;
   const now = new Date().toISOString();
@@ -1364,7 +1396,6 @@ async function saveStore() {
   }
   closeModal('store-modal');
   renderAll();
-  checkOnboarding();
 }
 
 // ═══════════════════════════════════════
@@ -1390,7 +1421,7 @@ function selectEmoji(el) {
 async function saveCategory() {
   const id = document.getElementById('cat-edit-id').value;
   const name = document.getElementById('cat-name').value.trim();
-  if (\!name) return;
+  if (!name) return;
   const icon = (document.querySelector('.emoji-opt.selected')||{textContent:'📦'}).textContent;
   const stock = document.getElementById('cat-stock-toggle').classList.contains('on');
   if (id) {
@@ -1407,12 +1438,11 @@ async function saveCategory() {
   closeModal('cat-modal');
   renderManageCategories();
   renderShopping();
-  checkOnboarding();
 }
 
 async function deleteCat(id) {
   showConfirm('分類を削除', 'この分類を削除しますか？', '削除', async () => {
-    S.categories = S.categories.filter(c => c.id \!== id);
+    S.categories = S.categories.filter(c => c.id !== id);
     await db.from('categories').delete().eq('id', id);
     renderManageCategories();
   });
@@ -1457,7 +1487,7 @@ async function toggleCatStock(id, el) {
 function renderInvTab() {
   const el = document.getElementById('settings-inventory');
   const stockCats = S.categories.filter(c => c.stock_enabled);
-  if (\!stockCats.length) {
+  if (!stockCats.length) {
     el.innerHTML = '<div class="empty-state"><div class="icon">📦</div><p>分類設定でストック管理をONにしてください</p></div>';
     return;
   }
@@ -1475,7 +1505,7 @@ function renderInvTab() {
     html += '<div class="section-card"><div class="card-header"><h3>'+cat.icon+' '+cat.name+'</h3></div>';
     items.forEach(item => {
       const low = (item.current_stock||0) <= (item.stock_threshold||0);
-      const inList = S.shoppingList.some(s => s.item_id === item.id && \!s.is_checked);
+      const inList = S.shoppingList.some(s => s.item_id === item.id && !s.is_checked);
       html += '<div class="row-item" style="'+(low?'background:#FFF5F5':'')+'"><div style="flex:1">';
       html += '<div style="font-weight:500">'+item.name+(low?' <span class="badge badge-orange">不足</span>':'')+(inList?' <span class="badge badge-green">追加済</span>':'')+'</div>';
       html += '<div style="font-size:11px;color:var(--muted)">買い足し目安:'+(item.stock_threshold||0)+(item.stock_unit||'個')+'</div></div>';
@@ -1492,13 +1522,13 @@ function renderInvTab() {
 
 async function updateStock(id, delta) {
   const item = getItem(id);
-  if (\!item) return;
+  if (!item) return;
   item.current_stock = Math.max(0,(item.current_stock||0)+delta);
   await db.from('items').update({current_stock:item.current_stock}).eq('id',id);
   renderInvTab();
   if (item.current_stock <= (item.stock_threshold||0)) {
-    const inList = S.shoppingList.some(s => s.item_id === id && \!s.is_checked);
-    if (\!inList) await addItemToList(item);
+    const inList = S.shoppingList.some(s => s.item_id === id && !s.is_checked);
+    if (!inList) await addItemToList(item);
   }
 }
 
@@ -1511,8 +1541,8 @@ async function addItemToList(item) {
 async function addAllLow() {
   const lows = S.items.filter(i => {
     const cat = getCat(i.category_id);
-    const inList = S.shoppingList.some(s => s.item_id === i.id && \!s.is_checked);
-    return cat && cat.stock_enabled && (i.current_stock||0) <= (i.stock_threshold||0) && \!inList;
+    const inList = S.shoppingList.some(s => s.item_id === i.id && !s.is_checked);
+    return cat && cat.stock_enabled && (i.current_stock||0) <= (i.stock_threshold||0) && !inList;
   });
   for (const item of lows) await addItemToList(item);
   renderInvTab();
@@ -1533,7 +1563,7 @@ async function saveInvItem() {
   const catId = document.getElementById('inv-cat-id').value;
   const editId = document.getElementById('inv-item-id').value;
   const name = document.getElementById('inv-name').value.trim();
-  if (\!name) return;
+  if (!name) return;
   const unit = document.getElementById('inv-unit').value||'個';
   const stock = parseFloat(document.getElementById('inv-stock').value)||0;
   const thr = parseFloat(document.getElementById('inv-threshold').value)||1;
@@ -1574,7 +1604,7 @@ function renderStoresMgmtTab() {
 
 function editStore(id) {
   const store = getStore(id);
-  if (\!store) return;
+  if (!store) return;
   document.getElementById('store-modal-title').textContent = '店舗を編集';
   document.getElementById('store-edit-id').value = id;
   document.getElementById('store-name').value = store.name;
@@ -1589,41 +1619,41 @@ function editStore(id) {
 // ═══════════════════════════════════════
 function renderMasterTab(search) {
   const el = document.getElementById('master-content');
-  const val = search \!== undefined ? search : (document.getElementById('master-search')||{value:''}).value;
-  // Items sorted by purchase frequency
+  const val = search !== undefined ? search : (document.getElementById('master-search')||{value:''}).value;
   const itemCounts = {};
   S.priceHistory.forEach(h => { itemCounts[h.item_id] = (itemCounts[h.item_id]||0) + 1; });
   let matchItems = val
     ? S.items.filter(i => i.name.includes(val))
     : S.items.slice().sort((a,b) => (itemCounts[b.id]||0)-(itemCounts[a.id]||0));
 
-  if (\!matchItems.length) {
-    el.innerHTML = '<div class="empty-state"><div class="icon">📋</div><p>よく買う商品がありません</p></div>';
+  if (!matchItems.length) {
+    el.innerHTML = '<div class="empty-state"><div class="icon">📋</div><p>よく買う商品がありません<br><small style="font-size:11px">商品を購入済みにすると<br>ここに表示されます</small></p></div>';
     return;
   }
   let html = '';
   matchItems.forEach(item => {
     const cat = getCat(item.category_id);
-    const lastHist = S.priceHistory.filter(h => h.item_id === item.id).slice(0,1)[0];
+    const lastHist = S.priceHistory.filter(h => h.item_id === item.id)[0];
     const freq = itemCounts[item.id] || 0;
-    html += '<div class="section-card"><div class="row-item">';
-    html += '<span style="font-size:20px">'+(cat?cat.icon:'📦')+'</span>';
-    html += '<div style="flex:1">';
-    html += '<div style="font-weight:600">'+item.name+'</div>';
-    html += '<div style="font-size:11px;color:var(--muted)">';
-    if (cat) html += cat.name + '　';
-    if (freq) html += '購入 '+freq+'回　';
-    if (lastHist) html += '直近 ¥'+lastHist.price;
+    // 横並びの1行カード: [icon] [名前 / サブ情報] [追加ボタン]
+    html += '<div style="background:var(--card);border-radius:10px;margin-bottom:8px;border:1px solid var(--border);padding:10px 12px;display:flex;align-items:center;gap:10px;">';
+    html += '<span style="font-size:22px;flex-shrink:0;">'+(cat?cat.icon:'📦')+'</span>';
+    html += '<div style="flex:1;min-width:0;">';
+    html += '<div style="font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">'+item.name+'</div>';
+    html += '<div style="font-size:11px;color:var(--muted);display:flex;gap:8px;flex-wrap:wrap;margin-top:2px;">';
+    if (cat) html += '<span>'+cat.name+'</span>';
+    if (freq) html += '<span>購入 '+freq+'回</span>';
+    if (lastHist) html += '<span>直近 ¥'+lastHist.price+'</span>';
     html += '</div></div>';
-    html += '<button class="btn-primary btn-sm" onclick="quickAddMaster(\''+item.id+'\')">追加</button>';
-    html += '</div></div>';
+    html += '<button style="background:var(--green);color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;" onclick="quickAddMaster(\''+item.id+'\')">追加</button>';
+    html += '</div>';
   });
   el.innerHTML = html;
 }
 
 async function quickAddMaster(itemId) {
   const item = getItem(itemId);
-  if (\!item) return;
+  if (!item) return;
   const storeId = S.currentStore === 'all' ? null : S.currentStore;
   const e = {
     item_id: item.id, item_name: item.name,
@@ -1643,19 +1673,19 @@ async function quickAddMaster(itemId) {
 // PRICE HISTORY
 // ═══════════════════════════════════════
 function renderPricesTab(search) {
-  const val = search \!== undefined ? search : (document.getElementById('price-search-input')||{value:''}).value;
+  const val = search !== undefined ? search : (document.getElementById('price-search-input')||{value:''}).value;
   const el = document.getElementById('prices-content');
   const matchItems = val
     ? S.items.filter(i => i.name.includes(val))
     : S.items.filter(i => S.priceHistory.some(h => h.item_id === i.id));
-  if (\!matchItems.length) {
+  if (!matchItems.length) {
     el.innerHTML = '<div class="empty-state"><div class="icon">📊</div><p>価格履歴がありません<br>商品を購入済みにすると記録されます</p></div>';
     return;
   }
   let html = '';
   matchItems.forEach(item => {
     const hist = S.priceHistory.filter(h => h.item_id === item.id).slice(0,8);
-    if (\!hist.length) return;
+    if (!hist.length) return;
     const minP = Math.min(...hist.map(h => h.price));
     html += '<div class="section-card">';
     html += '<div class="card-header"><h3>'+item.name+'</h3><span style="font-size:12px;color:var(--muted)">最安 ¥'+minP+'</span></div>';
@@ -1675,10 +1705,14 @@ function renderPricesTab(search) {
   el.innerHTML = html;
 }
 
-async function deleteHistEntry(id) {
+async function deleteHistEntry(histId) {
   showConfirm('履歴を削除', 'この価格履歴を削除しますか？', '削除', async () => {
-    S.priceHistory = S.priceHistory.filter(h => h.id \!== id);
-    await db.from('price_history').delete().eq('id', id);
+    const r = await db.from('price_history').delete().eq('id', histId);
+    if (r && r.error) {
+      showError('削除エラー: ' + (r.error.message || JSON.stringify(r.error)));
+      return;
+    }
+    S.priceHistory = S.priceHistory.filter(h => h.id !== histId);
     renderPricesTab('');
   });
 }
