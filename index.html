@@ -681,7 +681,7 @@ function renderStoreTabs() {
 
   const addBtn = document.getElementById('add-store-btn');
   // Sort stores by last_used_at descending (most recent first)
-  const sorted = S.stores.filter(s => s.is_master).slice().sort((a, b) => {
+  const sorted = S.stores.slice().sort((a, b) => {
     if (!a.last_used_at && !b.last_used_at) return 0;
     if (!a.last_used_at) return 1;
     if (!b.last_used_at) return -1;
@@ -719,19 +719,24 @@ async function selectStore(id) {
 // SWIPE GESTURE (修正⑥)
 // ═══════════════════════════════════════
 function setupSwipeGesture() {
-  let startX = 0, startY = 0;
+  let startX = 0, startY = 0, trackSwipe = false;
   document.body.addEventListener('touchstart', e => {
-    if (e.target.closest('.item-card,.modal-overlay,#bottom-nav,#store-tabs-wrap')) return;
+    if (e.target.closest('.item-card,.modal-overlay,#bottom-nav,#store-tabs-wrap')) {
+      trackSwipe = false;
+      return;
+    }
+    trackSwipe = true;
     startX = e.touches[0].clientX;
     startY = e.touches[0].clientY;
   }, {passive: true});
   document.body.addEventListener('touchend', e => {
+    if (!trackSwipe) return;
     const activeScreen = document.querySelector('.screen.active');
     if (!activeScreen || (activeScreen.id !== 'screen-shopping' && activeScreen.id !== 'screen-list')) return;
     const dx = e.changedTouches[0].clientX - startX;
     const dy = e.changedTouches[0].clientY - startY;
     if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
-    const sortedStores = S.stores.filter(s => s.is_master).slice().sort((a, b) => {
+    const sortedStores = S.stores.slice().sort((a, b) => {
       if (!a.last_used_at && !b.last_used_at) return 0;
       if (!a.last_used_at) return 1;
       if (!b.last_used_at) return -1;
@@ -886,7 +891,7 @@ function renderShopping() {
       if (!storeGroups[sid]) storeGroups[sid] = [];
       storeGroups[sid].push(item);
     });
-    S.stores.filter(s => s.is_master).forEach(s => {
+    S.stores.forEach(s => {
       if (!storeGroups[s.id]) storeGroups[s.id] = [];
     });
     Object.keys(storeGroups).forEach(storeId => {
