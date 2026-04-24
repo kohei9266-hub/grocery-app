@@ -552,8 +552,9 @@ function closeConfirm() {
   _confirmCallback = null;
 }
 document.getElementById('confirm-ok-btn').addEventListener('click', () => {
+  const cb = _confirmCallback;
   closeConfirm();
-  if (_confirmCallback) _confirmCallback();
+  if (cb) cb();
 });
 
 // ═══════════════════════════════════════
@@ -719,7 +720,7 @@ async function selectStore(id) {
 // SWIPE GESTURE (修正⑥)
 // ═══════════════════════════════════════
 function setupSwipeGesture() {
-  let startX = 0, startY = 0, trackSwipe = false;
+  let startX = 0, startY = 0, trackSwipe = false, storeListCache = [];
   document.body.addEventListener('touchstart', e => {
     if (e.target.closest('.item-card,.modal-overlay,#bottom-nav,#store-tabs-wrap')) {
       trackSwipe = false;
@@ -728,6 +729,7 @@ function setupSwipeGesture() {
     trackSwipe = true;
     startX = e.touches[0].clientX;
     startY = e.touches[0].clientY;
+    storeListCache = Array.from(document.querySelectorAll('.store-tab')).map(btn => btn.dataset.store);
   }, {passive: true});
   document.body.addEventListener('touchend', e => {
     if (!trackSwipe) return;
@@ -736,13 +738,7 @@ function setupSwipeGesture() {
     const dx = e.changedTouches[0].clientX - startX;
     const dy = e.changedTouches[0].clientY - startY;
     if (Math.abs(dx) < 50 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
-    const sortedStores = S.stores.slice().sort((a, b) => {
-      if (!a.last_used_at && !b.last_used_at) return 0;
-      if (!a.last_used_at) return 1;
-      if (!b.last_used_at) return -1;
-      return b.last_used_at.localeCompare(a.last_used_at);
-    });
-    const storeList = ['all', ...sortedStores.map(s => s.id)];
+    const storeList = storeListCache.length ? storeListCache : ['all'];
     let idx = storeList.indexOf(S.currentStore);
     if (dx < 0) idx = Math.min(storeList.length - 1, idx + 1);
     else idx = Math.max(0, idx - 1);
